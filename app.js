@@ -128,3 +128,18 @@ document.getElementById("copy-cite").addEventListener("click", async () => {
     status.textContent = " Citation selected. Use your device’s copy command.";
   }
 });
+const callbackSchedule = document.getElementById("cycle");
+callbackSchedule.addEventListener("change", () => {
+  const slow = callbackSchedule.value === "10";
+  const band = document.getElementById("rms-band");
+  band.style.left = slow ? "58.5%" : "7.4%";
+  band.style.width = slow ? "20.6%" : "7%";
+});
+const recordingCohort = document.getElementById("cohort");
+recordingCohort.addEventListener("change", () => {
+  const share =
+    recordingCohort.value === "second" ? (100 * 176) / 4551 : (100 * 81) / 2610;
+  document.getElementById("droid-band").style.width = `${share}%`;
+  document.getElementById("droid-percent").textContent =
+    `${share.toFixed(2)}% of retained rows`;
+});

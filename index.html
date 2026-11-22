@@ -1,60 +1,61 @@
 <!doctype html>
+
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f7f6ef" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="#173cdf" name="theme-color" />
     <title>
       Reconstructing Cartesian Controller Targets from Replay Telemetry ·
       Zhangwei Chen
     </title>
     <meta
-      name="description"
       content="An independent robotics study of the fields and timestamps that identify a Cartesian controller target, with simulated replay, Franka software, and physical DROID logs."
+      name="description"
     />
     <link
-      rel="canonical"
       href="https://shiraikuroko123.github.io/ral-controller-target-readback/"
+      rel="canonical"
     />
-    <meta property="og:type" content="article" />
+    <meta content="article" property="og:type" />
     <meta
-      property="og:title"
       content="Reconstructing Cartesian Controller Targets from Replay Telemetry"
+      property="og:title"
     />
     <meta
-      property="og:description"
       content="A robotics research manuscript by Zhangwei Chen. Explore the replay, delivered writes, and telemetry evidence."
+      property="og:description"
     />
     <meta
-      property="og:url"
       content="https://shiraikuroko123.github.io/ral-controller-target-readback/"
+      property="og:url"
     />
     <meta
+      content="https://shiraikuroko123.github.io/ral-controller-target-readback/assets/telemetry-share.jpg"
       property="og:image"
-      content="https://shiraikuroko123.github.io/ral-controller-target-readback/assets/videos/ral-pick-place-event5-poster.jpg"
     />
     <meta
-      property="og:image:alt"
       content="A simulated Fetch arm reaching toward a cube in the pick-and-place replay"
+      property="og:image:alt"
     />
-    <meta name="twitter:card" content="summary_large_image" />
-    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <meta content="summary_large_image" name="twitter:card" />
+    <link href="assets/favicon.svg" rel="icon" type="image/svg+xml" />
     <link
-      rel="preload"
       as="font"
+      crossorigin=""
+      href="assets/fonts/barlow-condensed.woff"
+      rel="preload"
       type="font/woff"
-      crossorigin
-      href="assets/fonts/stix.woff"
     />
-    <link rel="stylesheet" href="styles.css?v=3" />
-    <script src="app.js?v=3" defer></script>
+    <link href="styles.css?v=4" rel="stylesheet" />
+    <script defer="" src="app.js?v=4"></script>
   </head>
   <body id="top">
     <a class="skip" href="#main">Skip to research</a>
     <header>
       <div class="wrap mast">
-        <a href="#top" class="brand"
-          ><span class="signal" aria-hidden="true"><i></i><i></i><i></i></span
+        <a class="brand" href="#top"
+          ><span aria-hidden="true" class="signal"><i></i><i></i><i></i></span
           >Replay telemetry</a
         >
         <nav aria-label="Page navigation">
@@ -65,60 +66,53 @@
     </header>
     <main id="main">
       <div class="wrap">
-        <section class="intro" aria-labelledby="title">
-          <div class="imprint">
-            <span>Robotics research manuscript</span><span>November 2026</span>
-          </div>
-          <h1 id="title">
-            Reconstructing Cartesian Controller Targets
-            <em>from Replay Telemetry</em>
-          </h1>
-          <div class="introbase">
-            <p>
-              When a robot arm replays a demonstration, which fields tell us the
-              target its controller actually used?
-            </p>
-            <div class="credits">
-              <div>
-                <strong>Zhangwei Chen</strong
-                ><small>Independent researcher</small>
-              </div>
-              <a class="paper" href="papers/ral/ral-manuscript.pdf"
-                >Read paper <span aria-hidden="true">↗</span></a
+        <section aria-labelledby="title" class="blueprint">
+          <div class="drawing">
+            <div class="identity">
+              <p class="drawing-id">Cartesian control / research manuscript</p>
+              <h1 id="title">Replay<br /><em>telemetry.</em></h1>
+              <p class="dek">Which command did the robot actually execute?</p>
+              <a class="hero-paper" href="papers/ral/ral-manuscript.pdf"
+                >Read the paper <span aria-hidden="true">↗</span></a
               >
             </div>
+            <div class="scope">
+              <div class="scope-head">
+                <span><i></i> Fetch / simulation</span
+                ><span>20 fps · 1080p</span>
+              </div>
+              <div class="viewer-media">
+                <video
+                  aria-label="Fetch pick-and-place replay with measured hand feedback"
+                  data-file="assets/videos/ral-fetch-pick-place-drop-event5-202611204-1080p.mp4"
+                  id="replay"
+                  loop=""
+                  muted=""
+                  playsinline=""
+                  poster="assets/videos/ral-pick-place-event5-poster.jpg"
+                  preload="none"
+                ></video
+                ><button
+                  aria-label="Play replay"
+                  class="play"
+                  id="play"
+                  type="button"
+                >
+                  <span aria-hidden="true" id="play-icon">▷</span
+                  ><span id="play-label">Play</span>
+                </button>
+              </div>
+            </div>
           </div>
-        </section>
-        <figure class="viewer" aria-label="Simulated Fetch replay">
-          <div class="viewer-media">
-            <video
-              id="replay"
-              muted
-              playsinline
-              loop
-              preload="none"
-              poster="assets/videos/ral-pick-place-event5-poster.jpg"
-              data-file="assets/videos/ral-fetch-pick-place-drop-event5-202611204-1080p.mp4"
-              aria-label="Fetch pick-and-place replay with measured hand feedback"
-            ></video
-            ><button
-              id="play"
-              class="play"
-              type="button"
-              aria-label="Play replay"
-            >
-              <span id="play-icon" aria-hidden="true">▷</span
-              ><span id="play-label">Play</span>
-            </button>
-          </div>
-          <figcaption class="viewer-notes">
-            <div class="imprint pale">Simulation footage</div>
-            <h2 id="replay-title">A missed command</h2>
-            <p id="replay-copy">
-              Five translations are suppressed as Fetch approaches the cube.
-              Re-encoding from the measured hand with feedback completes this
-              layout.
-            </p>
+          <div class="readout">
+            <div class="replay-key">
+              <h2 id="replay-title">A missed command</h2>
+              <p id="replay-copy">
+                Five translations are suppressed as Fetch approaches the cube.
+                Re-encoding from the measured hand with feedback completes this
+                layout.
+              </p>
+            </div>
             <dl>
               <div>
                 <dt>Task</dt>
@@ -133,28 +127,31 @@
                 <dd id="onset">Step 10</dd>
               </div>
             </dl>
-            <label for="clip">Inspect another replay</label
-            ><select id="clip">
-              <option value="placement-feedback">
-                Pick and place · feedback
-              </option>
-              <option value="placement-copy">
-                Pick and place · direct copy
-              </option>
-              <option value="push-feedback">Push · feedback</option>
-              <option value="push-copy">Push · direct copy</option>
-            </select>
-          </figcaption>
-        </figure>
+            <div class="switch">
+              <label for="clip">Inspect another replay</label
+              ><select id="clip">
+                <option value="placement-feedback">
+                  Pick and place · feedback
+                </option>
+                <option value="placement-copy">
+                  Pick and place · direct copy
+                </option>
+                <option value="push-feedback">Push · feedback</option>
+                <option value="push-copy">Push · direct copy</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
         <p class="edition">
           Native Gymnasium-Robotics replay · 1080p, 20 fps. Fetch uses the
           measured hand as its command origin. These two illustrative layouts
           come from the shared simulation study.
         </p>
-        <section id="evidence" class="section">
+        <section class="section" id="evidence">
           <div class="heading">
-            <span class="mark" aria-hidden="true"></span>
-            <h2>What the receiver knows</h2>
+            <span aria-hidden="true" class="mark"></span>
+            <h2>Inside the receiver</h2>
           </div>
           <div class="open-copy">
             <p>
@@ -169,7 +166,20 @@
               proposed rewrite against all of them.
             </p>
           </div>
-          <div class="evidence-block">
+          <div
+            aria-label="Two histories produce the same sender log"
+            class="pathways"
+          >
+            <div class="path-node">
+              <span>Sender</span><strong>Displacement issued</strong>
+            </div>
+            <div aria-hidden="true" class="fork"><i></i><i></i></div>
+            <div class="path-out">
+              <div><i></i> Applied <span>Stored target updates</span></div>
+              <div><i></i> Suppressed <span>Previous target holds</span></div>
+            </div>
+          </div>
+          <div class="evidence-block sawyer">
             <div>
               <span class="imprint">Sawyer / simulation</span>
               <h3>Which rewrites reached the controller?</h3>
@@ -192,9 +202,9 @@
               <span class="imprint">Admitted rewrites</span>
               <div class="big">658</div>
               <div
+                aria-label="560 delivered and 98 suppressed, out of 658 admitted"
                 class="bar"
                 role="img"
-                aria-label="560 delivered and 98 suppressed, out of 658 admitted"
               >
                 <i></i><i></i>
               </div>
@@ -205,20 +215,25 @@
               <fieldset>
                 <legend>Inspect a branch</legend>
                 <label
-                  ><input type="radio" name="stage" value="delivered" checked />
+                  ><input
+                    checked=""
+                    name="stage"
+                    type="radio"
+                    value="delivered"
+                  />
                   Delivered</label
                 ><label
-                  ><input type="radio" name="stage" value="suppressed" />
+                  ><input name="stage" type="radio" value="suppressed" />
                   Suppressed</label
                 >
               </fieldset>
-              <p id="guard-note" aria-live="polite">
+              <p aria-live="polite" id="guard-note">
                 All 560 reached the setter and reduced squared error on that
                 write.
               </p>
             </div>
           </div>
-          <div class="evidence-block">
+          <div class="evidence-block franka">
             <div>
               <span class="imprint">Franka / controller software</span>
               <h3>When did the command take effect?</h3>
@@ -236,13 +251,20 @@
               >
             </div>
             <div class="instrument">
-              <label for="cycle" class="imprint">Callback schedule</label
+              <label class="imprint" for="cycle">Callback schedule</label
               ><select id="cycle">
                 <option value="1">Every control cycle</option>
                 <option value="10">Every ten control cycles</option>
               </select>
-              <div id="error-range" class="range" aria-live="polite">
+              <div aria-live="polite" class="range" id="error-range">
                 0.074–0.144 <small>mm</small>
+              </div>
+              <div
+                aria-label="Location of send-time error range from zero to one millimetre"
+                class="rms-scale"
+              >
+                <div><i id="rms-band"></i></div>
+                <span>0 mm</span><span>1 mm</span>
               </div>
               <p>
                 Target RMS error across three runs when using the send time. The
@@ -251,7 +273,7 @@
               </p>
             </div>
           </div>
-          <div class="evidence-block">
+          <div class="evidence-block droid">
             <div>
               <span class="imprint">DROID / physical recordings</span>
               <h3>What does a status flag identify?</h3>
@@ -267,15 +289,19 @@
               >
             </div>
             <div class="instrument">
-              <label for="cohort" class="imprint">Recording cohort</label
+              <label class="imprint" for="cohort">Recording cohort</label
               ><select id="cohort">
                 <option value="first">Initial 12 recordings</option>
                 <option value="second">
                   13 recordings from disjoint site–date pairs
                 </option>
               </select>
-              <div id="droid-count" class="range" aria-live="polite">
+              <div aria-live="polite" class="range" id="droid-count">
                 81 <small>of 2,610 rows</small>
+              </div>
+              <div class="droid-share">
+                <div><i id="droid-band"></i></div>
+                <span id="droid-percent">3.10% of retained rows</span>
               </div>
               <p id="droid-note">
                 Retained rows with different flag values across the two sampling
@@ -284,10 +310,10 @@
             </div>
           </div>
         </section>
-        <section id="extensions" class="section">
+        <section class="section" id="extensions">
           <div class="heading">
-            <span class="mark" aria-hidden="true"></span>
-            <h2>Tabletop extensions</h2>
+            <span aria-hidden="true" class="mark"></span>
+            <h2>Beyond the test bench</h2>
           </div>
           <p class="lead">
             Two exploratory simulations examine visibility and physical clutter.
@@ -296,11 +322,11 @@
           <div class="extras">
             <figure>
               <video
-                controls
-                playsinline
-                preload="none"
                 aria-label="LIBERO bowl placement with seven objects"
+                controls=""
+                playsinline=""
                 poster="assets/videos/complex-online-seven-objects-poster.jpg"
+                preload="none"
                 src="assets/videos/complex-online-seven-objects.mp4"
               ></video>
               <figcaption>
@@ -313,11 +339,11 @@
             </figure>
             <figure>
               <video
-                controls
-                playsinline
-                preload="none"
                 aria-label="LIBERO drawer opening with six movable objects"
+                controls=""
+                playsinline=""
                 poster="assets/videos/complex-cross-task-drawer-poster.jpg"
+                preload="none"
                 src="assets/videos/complex-cross-task-drawer.mp4"
               ></video>
               <figcaption>
@@ -333,11 +359,14 @@
             >Extension footage provenance ↗</a
           >
         </section>
-        <section id="materials" class="section">
+        <section class="section" id="materials">
           <div class="heading">
-            <span class="mark" aria-hidden="true"></span>
-            <h2>Paper and materials</h2>
+            <span aria-hidden="true" class="mark"></span>
+            <h2>Research materials</h2>
           </div>
+          <h3 class="formal-title">
+            Reconstructing Cartesian Controller Targets from Replay Telemetry
+          </h3>
           <p class="lead">
             Zhangwei Chen · Independent researcher · November 2026. Preprint
             prepared for IEEE Robotics and Automation Letters.
@@ -365,7 +394,7 @@
   year = {2026},
   note = {Author manuscript}
 }</pre>
-            <button id="copy-cite" class="copy-btn" type="button">
+            <button class="copy-btn" id="copy-cite" type="button">
               Copy citation</button
             ><span id="copy-state" role="status"></span>
           </details>
