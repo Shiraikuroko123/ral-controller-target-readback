@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f4f1ea" />
+    <meta
+      name="description"
+      content="RA-L study separating target-writing error from physical tracking error in Cartesian demonstration replay."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="RA-L · Controller Target Readback" />
+    <meta
+      property="og:description"
+      content="A cross-embodiment replay study of hand feedback, sparse target reads, and the source of Cartesian replay error."
+    />
+    <meta property="og:url" content="https://shiraikuroko123.github.io/ral-controller-target-readback/" />
+    <meta property="og:image" content="https://shiraikuroko123.github.io/ral-controller-target-readback/assets/ral-origin-readback.png" />
+    <meta property="og:image:alt" content="RA-L controller origin readback and replay comparison" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="RA-L · Controller Target Readback" />
+    <meta
+      name="twitter:description"
+      content="When does controller target readback help Cartesian demonstration replay?"
+    />
+    <meta name="twitter:image" content="https://shiraikuroko123.github.io/ral-controller-target-readback/assets/ral-origin-readback.png" />
+    <link rel="canonical" href="https://shiraikuroko123.github.io/ral-controller-target-readback/" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css?v=1" />
+    <script src="app.js?v=1" defer></script>
+    <title>RA-L · Controller Target Readback</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="wordmark" href="#top" aria-label="RA-L Robot Replay home">
+          <span class="wordmark-dot"></span>
+          <span>RA-L ROBOT<br /><em>REPLAY</em></span>
+        </a>
+        <nav class="nav" aria-label="Primary navigation">
+          <a href="#question">Question</a>
+          <a href="#evidence">Evidence</a>
+          <a href="#extensions">Extension</a>
+          <a href="#reproduce">Reproduce</a>
+        </nav>
+        <div class="header-tools">
+          <a class="header-link" href="https://github.com/Shiraikuroko123/ral-controller-target-readback" target="_blank" rel="noreferrer">GitHub ↗</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <div class="shell hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">IEEE ROBOTICS AND AUTOMATION LETTERS · MANUSCRIPT · 2026</p>
+            <h1>When does controller target readback <span>help replay?</span></h1>
+            <p class="hero-lede">
+              A cross-embodiment study separates target-writing error from physical tracking error. It tests whether
+              hand measurements and command history recover the replay before a hidden controller target must be read.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-dark" href="#evidence">Follow the diagnosis <span>↓</span></a>
+              <a class="text-button" href="papers/ral/ral-manuscript.pdf">Read the RA-L manuscript ↗</a>
+            </div>
+            <div class="hero-note">
+              <span class="status-mark"></span>
+              <span>Simulation · Fetch, Sawyer, Panda · 144 held-out conditions</span>
+            </div>
+          </div>
+          <div class="hero-figure">
+            <div class="hero-figure-top">
+              <span>LIVE REPLAY / HAND FEEDBACK</span>
+              <span>RA-L</span>
+            </div>
+            <div class="hero-image-wrap hero-video-frame">
+              <video
+                aria-label="Fetch pick-and-place replay with measured-reference hand feedback"
+                autoplay
+                muted
+                loop
+                playsinline
+                preload="metadata"
+                poster="assets/videos/ral-pick-place-event5-poster.jpg"
+                width="1920"
+                height="1080"
+              >
+                <source src="assets/videos/ral-fetch-pick-place-drop-event5-202611204-1080p.mp4" type="video/mp4" />
+              </video>
+              <div class="figure-stamp">MEASURED REFERENCE → SUCCESS</div>
+              <div class="scanline" aria-hidden="true"></div>
+            </div>
+            <p class="figure-caption">
+              Fetch pick-and-place replay using measured hand feedback after a five-step input drop. The clip is
+              simulation output rendered at 1920×1080 and 20 FPS.
+            </p>
+            <div class="signal-orbit" aria-label="RA-L evidence path">
+              <span class="orbit-node node-one">MEASURE</span>
+              <span class="orbit-line line-one"></span>
+              <span class="orbit-node node-two">RECONSTRUCT</span>
+              <span class="orbit-line line-two"></span>
+              <span class="orbit-node node-three">READ</span>
+              <span class="orbit-line line-three"></span>
+              <span class="orbit-node node-four">REPLAY</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="shell metric-rail" aria-label="RA-L study metrics">
+          <div class="metric">
+            <strong>144</strong>
+            <span>held-out replay conditions</span>
+          </div>
+          <div class="metric">
+            <strong>140 / 144</strong>
+            <span>hand-observer successes</span>
+          </div>
+          <div class="metric">
+            <strong>123</strong>
+            <span>event-triggered target reads</span>
+          </div>
+          <div class="metric metric-accent">
+            <strong>0.039 mm</strong>
+            <span>mean hand-path reduction</span>
+          </div>
+        </div>
+        <div class="shell motion-rail" aria-label="RA-L research path">
+          <span class="motion-tag">ERROR PATH</span>
+          <div class="motion-track">
+            <span class="motion-point active">command history</span>
+            <i></i>
+            <span class="motion-point">hand state</span>
+            <i></i>
+            <span class="motion-point">target read</span>
+            <i></i>
+            <span class="motion-point">terminal outcome</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section question-section" id="question">
+        <div class="shell narrow">
+          <p class="section-index">01 / THE QUESTION</p>
+          <h2>A replay can fail for two different reasons.</h2>
+          <p class="section-intro">
+            The sender may write the wrong Cartesian target, or the robot may track a correct target imperfectly.
+            RA-L holds the observer and perturbation protocol fixed while varying access to the hidden controller
+            target.
+          </p>
+        </div>
+        <div class="shell split-question">
+          <article class="question-card ral-tint">
+            <div class="card-top"><span>DIAGNOSIS</span><span>WHERE</span></div>
+            <h3>Separate target-writing error from tracking error.</h3>
+            <p>
+              Measurements before and after each command reconstruct the target relative to the hand. The diagnostic
+              asks whether a direct controller read supplies information that the observer cannot already infer.
+            </p>
+          </article>
+          <article class="question-card rss-tint">
+            <div class="card-top"><span>DECISION</span><span>WHEN</span></div>
+            <h3>Read only when the observer leaves an ambiguity.</h3>
+            <p>
+              Event-triggered reads are compared with direct copying, fixed schedules, and hand-based reconstruction
+              across Fetch, Sawyer, and Panda replay conditions.
+            </p>
+          </article>
+        </div>
+        <div class="shell relation-line">
+          <span class="line-dot"></span>
+          <span>One observer, multiple information paths, one replay outcome</span>
+          <span class="line-rule"></span>
+          <span>Simulation evidence · no real-robot claim</span>
+        </div>
+      </section>
+
+      <section class="section evidence-section" id="evidence">
+        <div class="shell section-heading">
+          <div>
+            <p class="section-index">02 / MEASURED EVIDENCE</p>
+            <h2>Measure the hand, reconstruct the target, then decide whether to read.</h2>
+          </div>
+          <p class="section-side-note">
+            The main RA-L cohort keeps the observer fixed and reports both trajectory error and native terminal
+            outcomes across three robot embodiments.
+          </p>
+        </div>
+
+        <div class="shell study-panel ral-panel" style="margin-top: 57px">
+          <div class="study-header">
+            <div>
+              <span class="study-kicker">RA-L / ERROR DIAGNOSIS</span>
+              <h3>Hand feedback often resolves the replay before a target read is needed.</h3>
+            </div>
+            <div class="study-pullquote">
+              <strong>0 / 144</strong>
+              <span>terminal outcomes changed by 123 reads</span>
+            </div>
+          </div>
+          <div class="study-grid">
+            <div class="study-copy">
+              <p>
+                The study compares direct command history, hand-based reconstruction, event-triggered readback, and
+                fixed schedules across Fetch, Sawyer, and Panda. The central comparison keeps the observer fixed while
+                varying access to the hidden controller target.
+              </p>
+              <div class="evidence-table">
+                <div><span>Hand observer</span><strong>140 / 144</strong></div>
+                <div><span>Event reads on observer</span><strong>140 / 144</strong></div>
+                <div><span>Mean hand RMS reduction</span><strong>0.039 mm</strong></div>
+                <div><span>Paired 95% CI</span><strong>[0.012, 0.068] mm</strong></div>
+              </div>
+              <p class="boundary">
+                <b>Boundary.</b> The guarantee is local to a delivered write and the evidence is simulation-based.
+                It does not establish hard real-time behavior or a universal readback schedule.
+              </p>
+            </div>
+            <figure class="study-figure">
+              <img src="assets/ral-origin-readback.png" alt="RA-L controller origin readback and replay comparison" loading="lazy" />
+              <figcaption>Hidden controller origin and replay correction.</figcaption>
+            </figure>
+          </div>
+          <div class="figure-strip">
+            <figure>
+              <img src="assets/ral-replay-comparison.png" alt="RA-L cross-embodiment replay comparison" loading="lazy" />
+              <figcaption>Reconstruction and readback across Fetch, Sawyer, and Panda.</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/ral-confirmation.png" alt="RA-L confirmation cohort paired outcomes" loading="lazy" />
+              <figcaption>Confirmation cohort with matched terminal outcomes.</figcaption>
+            </figure>
+          </div>
+          <div class="media-evidence-grid single">
+            <figure class="media-card hover-zoom">
+              <div class="frame-stage">
+                <img src="assets/ral-fetch-example.png" alt="Fetch re-encoding comparison showing direct-copy failure and measured-reference success" loading="lazy" />
+                <span class="frame-label label-static">RA-L / FETCH</span>
+              </div>
+              <figcaption>Measured-reference re-encoding rescues the Fetch replay without a target read.</figcaption>
+            </figure>
+          </div>
+          <div class="video-evidence-grid" aria-label="RA-L replay videos">
+            <figure class="media-card video-card">
+              <div class="video-stage">
+                <video controls preload="none" poster="assets/videos/ral-pick-place-copy-poster.jpg" aria-label="RA-L Fetch pick-and-place direct-copy replay">
+                  <source src="assets/videos/ral-fetch-pick-place-drop-copy-202611204-1080p.mp4" type="video/mp4" />
+                </video>
+              </div>
+              <figcaption>Fetch pick-and-place · direct copy after a five-step drop · failure.</figcaption>
+            </figure>
+            <figure class="media-card video-card">
+              <div class="video-stage">
+                <video controls preload="none" poster="assets/videos/ral-push-event5-poster.jpg" aria-label="RA-L Fetch push measured-reference replay">
+                  <source src="assets/videos/ral-fetch-push-drop-event5-202611203-1080p.mp4" type="video/mp4" />
+                </video>
+              </div>
+              <figcaption>Fetch push · measured-reference replay with hand feedback · success.</figcaption>
+            </figure>
+            <figure class="media-card video-card">
+              <div class="video-stage">
+                <video controls preload="none" poster="assets/videos/ral-push-copy-poster.jpg" aria-label="RA-L Fetch push direct-copy replay">
+                  <source src="assets/videos/ral-fetch-push-drop-copy-202611203-1080p.mp4" type="video/mp4" />
+                </video>
+              </div>
+              <figcaption>Fetch push · direct copy after a five-step drop · failure.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="section extension-section" id="extensions">
+        <div class="shell section-heading">
+          <div>
+            <p class="section-index">03 / COMPLEX TABLETOP EXTENSION</p>
+            <h2>Can error diagnosis survive a cluttered tabletop?</h2>
+          </div>
+          <p class="section-side-note">
+            These two clips are supplementary stress tests for occlusion, movable objects, and physical contact. They
+            are separate from the 144-condition RA-L cohort.
+          </p>
+        </div>
+        <div class="shell extension-boundary">
+          <div class="extension-boundary-mark">SCOPE</div>
+          <p>
+            The seven-object online clip changes what an external camera can see while keeping the wrist view and
+            proprioception fixed. The cross-task replay isolates movable-object contact across LIBERO-Goal tasks.
+          </p>
+          <span class="extension-boundary-tag">SIMULATION · SUPPLEMENTARY</span>
+        </div>
+        <div class="shell extension-grid">
+          <figure class="media-card extension-card">
+            <div class="video-stage">
+              <video controls preload="none" poster="assets/videos/complex-online-seven-objects-poster.jpg" aria-label="OpenVLA-OFT online replay with seven-object tabletop and external-camera occlusion">
+                <source src="assets/videos/complex-online-seven-objects.mp4" type="video/mp4" />
+              </video>
+              <span class="extension-chip">ONLINE · SEVEN OBJECTS</span>
+            </div>
+            <figcaption>
+              <strong>External-camera occlusion</strong>
+              <span>LIBERO Spatial bowl placement · juice carton visible or hidden to the external camera · exploratory OpenVLA-OFT comparison</span>
+            </figcaption>
+          </figure>
+          <figure class="media-card extension-card">
+            <div class="video-stage">
+              <video controls preload="none" poster="assets/videos/complex-cross-task-drawer-poster.jpg" aria-label="Fixed human-action replay of drawer opening with movable tabletop clutter">
+                <source src="assets/videos/complex-cross-task-drawer.mp4" type="video/mp4" />
+              </video>
+              <span class="extension-chip">FIXED TAPE · CROSS TASK</span>
+            </div>
+            <figcaption>
+              <strong>Movable clutter across tasks</strong>
+              <span>Drawer, stove, and container-placement demonstrations with six movable objects · human actions replayed at 20 Hz</span>
+            </figcaption>
+          </figure>
+        </div>
+        <div class="shell extension-note">
+          <p>
+            <b>Reading boundary.</b> These clips motivate a future matched study that measures target and tracking
+            error under clutter. They do not add a new RA-L statistic or algorithmic claim.
+          </p>
+          <a class="text-button" href="assets/videos/ral-extension-manifest.json">Open extension manifest ↗</a>
+        </div>
+      </section>
+
+      <section class="section relation-section">
+        <div class="shell relation-grid">
+          <div>
+            <p class="section-index">04 / CLAIM BOUNDARY</p>
+            <h2>One paper, one diagnosis, one evidence path.</h2>
+          </div>
+          <div class="relation-copy">
+            <div class="relation-item">
+              <span class="relation-number">01</span>
+              <p><b>Claim.</b> Hand feedback can distinguish target-writing error from physical tracking error in replay.</p>
+            </div>
+            <div class="relation-item">
+              <span class="relation-number">02</span>
+              <p><b>Evidence.</b> Matched Fetch, Sawyer, and Panda conditions compare reconstruction, event reads, and terminal outcomes.</p>
+            </div>
+            <div class="relation-item">
+              <span class="relation-number">03</span>
+              <p><b>Boundary.</b> The study is simulation-based and does not claim hard real-time behavior or a universal readback schedule.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section reproduce-section" id="reproduce">
+        <div class="shell reproduce-grid">
+          <div>
+            <p class="section-index">05 / REPRODUCE</p>
+            <h2>Open the paper, figures, and frozen evidence.</h2>
+            <p class="section-intro">
+              This repository contains only the RA-L paper tree and RA-L media. The RSS study has a separate repository
+              and separate website.
+            </p>
+            <div class="artifact-list">
+              <a href="papers/ral/ral-manuscript.pdf"><span>RA-L manuscript PDF</span><b>papers/ral/ ↗</b></a>
+              <a href="papers/ral/main.tex"><span>RA-L LaTeX source</span><b>main.tex ↗</b></a>
+              <a href="papers/ral/figures/"><span>RA-L figures</span><b>figures/ ↗</b></a>
+              <a href="https://github.com/Shiraikuroko123/ral-controller-target-readback" target="_blank" rel="noreferrer"><span>GitHub repository</span><b>Open source ↗</b></a>
+            </div>
+          </div>
+          <div class="citation-block">
+            <div class="citation-header"><span>CITATION / PREPRINT DRAFT</span><button type="button" data-copy-citation>Copy</button></div>
+            <pre id="citation"><code>@misc{chen_controller_readback_2026,
+  author = {Chen, Zhangwei},
+  title  = {When Does Controller Target Readback Help Cartesian Demonstration Replay?},
+  year   = {2026},
+  note   = {RA-L manuscript and reproducible evidence}
+}</code></pre>
+            <p>Publication status is shown in the repository and will be updated after a venue decision.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <div><span class="footer-mark">RA-L</span><span>Controller Target Readback</span></div>
+        <span>Independent research · Zhangwei Chen · 2026</span>
+        <a href="#top">Back to top ↑</a>
+      </div>
+    </footer>
+  </body>
+</html>

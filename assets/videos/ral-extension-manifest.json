@@ -1,0 +1,25 @@
+{
+  "paper": "RA-L",
+  "status": "supplementary-development-evidence",
+  "scope": "Two complex-tabletop clips are kept separate from the RA-L 144-condition cohort and do not add a new paper statistic.",
+  "records": [
+    {
+      "file": "complex-online-seven-objects.mp4",
+      "poster": "complex-online-seven-objects-poster.jpg",
+      "source_report": "research_upgrade_20261119/occluded-pantry-001/RESULT_ZH.md",
+      "task": "LIBERO Spatial bowl placement",
+      "condition": "Seven-object tabletop with external-camera occlusion",
+      "policy": "OpenVLA-OFT with periodic visual queries",
+      "status": "exploratory online dual-camera comparison"
+    },
+    {
+      "file": "complex-cross-task-drawer.mp4",
+      "poster": "complex-cross-task-drawer-poster.jpg",
+      "source_report": "research_upgrade_20261120/cross-task-clutter-001/RESULTS_ZH.md",
+      "task": "LIBERO-Goal drawer opening",
+      "condition": "Six movable objects with normal contact versus tabletop-only contact",
+      "policy": "Human demonstration replay at 20 Hz",
+      "status": "cross-task fixed-tape physical-contact study"
+    }
+  ]
+}
