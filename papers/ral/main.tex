@@ -3,38 +3,39 @@
 \overrideIEEEmargins
 \usepackage[T1]{fontenc}
 \usepackage{times,amsmath,amssymb,graphicx,booktabs,cite,url}
-\usepackage[hidelinks,pdfauthor={},pdftitle={When Does Controller Target Readback Help Cartesian Demonstration Replay?}]{hyperref}
+\usepackage[hidelinks,pdfauthor={},pdftitle={Reconstructing Cartesian Controller Targets from Replay Telemetry}]{hyperref}
 \ifdefined\pdfminorversion\pdfminorversion=5\fi
-\title{\LARGE\bf When Does Controller Target Readback Help\\ Cartesian Demonstration Replay?}
+\title{\LARGE\bf Reconstructing Cartesian Controller Targets\\ from Replay Telemetry}
 \author{\phantom{Anonymous Author}}
 \begin{document}
 \maketitle
 \thispagestyle{empty}
 \pagestyle{empty}
 \begin{abstract}
-A robot replaying a Cartesian demonstration can observe its hand and remember every command it sent, yet still lose track of the target stored by its controller. When does reading that target improve manipulation? We derive the worst error achievable on the next bounded target write with and without a read, then compare policies on matched simulated arm trajectories. On Fetch, re-encoding displacements relative to the measured hand rescued 19 of 48 layouts after a five-step input override without a target read. On Sawyer, a hand-based observer succeeded in 140 of 144 trials. Adding 123 reads changed none of the terminal outcomes and reduced mean hand-path error by 0.039\,mm. On a simulated Panda, direct copying failed on all eight descent overrides in each of two controller modes, while hand-based reconstruction recovered all eight. During lift, reading the accumulating controller corrected a 120.32\,mm mean origin estimate error but changed its next target by only 0.026\,mm on average. Three read-only successes with coarse hand measurements did not recur on 24 new layouts. These results identify when readback can change a command and show how command limits and hand feedback constrain its value for task completion.
+A replay program needs the target around which the controller will interpret its next displacement. A log of sent commands may leave that target ambiguous if the receiver suppresses, attenuates or delays an input. We give conditions under which a target sample or an application acknowledgment identifies the current command origin. When several origins remain possible, we test whether a proposed rewrite reduces squared target error for every origin in a bounding box. Across 36 simulated Sawyer layouts, the test admitted 658 of 12,474 candidate rewrites. All 560 that reached the controller reduced error on that write, although the guarded and unguarded policies completed the same 144 trials. In a software test of a Franka equilibrium filter, the acknowledged application cycles of 120 commands sufficed to reconstruct 5,400 updates to numerical precision. In two cohorts of physical DROID recordings, the stored command-status flag differed between observation and action sampling on 81 of 2,610 and 176 of 4,551 retained rows. These results specify what a replay interface must record before it can use a status flag to reconstruct a target or certify a change to the next command.
 \end{abstract}
 \begin{keywords}Motion Control, Performance Evaluation and Benchmarking.\end{keywords}
 
 \section{Introduction}
-A replay program sends a displacement to a robot arm, then discovers that the hand is behind the demonstration. If the controller adds the next displacement to the measured hand position, the program can recompute the command from that measurement. If the controller adds it to a stored target, the same measurement can be consistent with several command histories. Reading the stored target resolves its current value. Whether the robot can use that information to bring an object to its goal is a separate question (Fig.~\ref{fig:origin}).
+A replay program sends a Cartesian displacement at one control cycle. The receiver may apply it later, replace it with zero, or scale its magnitude. All three events leave the same entry in the sender's log. If the next displacement starts at the target stored by the receiver, the replay program needs to distinguish these histories before it can compute the next target. Knowing which cycle applied a command can resolve the ambiguity when the receiver's update law is known (Fig.~\ref{fig:origin}).
 \begin{figure}[t]
 \centering\includegraphics[width=\columnwidth]{figures/origin-readback.pdf}
-\caption{(a) The same displacement starts at the measured hand or the previous target, depending on the controller. (b) At the first command after a five-step override on the accumulating Panda, the mean error in the estimated origin (open diamond) can greatly exceed the change in the target actually written after a read (filled circle). Values average eight matched layouts per phase.}\label{fig:origin}
+\caption{(a) A replay decision uses the information available before a write. A known origin can be used directly. If several origins remain, the program tests a candidate against all of them and checks the resulting write when delivered. (b) Each marker shows one software run of the Franka equilibrium filter. Inferring the application cycle from send time produced larger reconstruction errors when callbacks were serviced every ten cycles. Application-cycle acknowledgments gave errors below $10^{-6}$\,mm in both settings.}\label{fig:origin}
 \end{figure}
-Action definitions vary across robot datasets and can affect transfer~\cite{openx2024,aljalbout2024action}. ManiSkill2 distinguishes measured and desired command references when converting demonstrations~\cite{gu2023maniskill2}. MimicGen converts target poses into bounded actions~\cite{mimicgen2023}. These methods motivate an execution question. When an applied input differs from the one recorded by the sender, which observation should a replay program use to reconstruct its next displacement?
+Action definitions vary across robot datasets and can affect transfer~\cite{openx2024,aljalbout2024action}. ManiSkill2 distinguishes measured and desired command references when converting demonstrations~\cite{gu2023maniskill2}. MimicGen converts target poses into bounded actions~\cite{mimicgen2023}. These conversions depend on the reference used by the receiver. Even when the source convention is known, the destination may have applied a different sequence of inputs.
 
-Reference governors and reactive trajectory adaptation address command constraints and feedback during execution~\cite{governor,vochten2021}. Event-triggered control and estimation relate communication to a control or estimation objective~\cite{tabuada,trimpe}. Input acknowledgments can inform a controller about losses~\cite{schenato}, and event-triggered communication has supported cooperative manipulation~\cite{cooperative}. We examine a specific message in single-arm replay, the receiver's current Cartesian target. Its value depends on what the measured hand and submitted commands already reveal.
+Reference governors and reactive trajectory adaptation address command constraints and feedback during execution~\cite{governor,vochten2021}. Event-triggered control and estimation relate communication to a control or estimation objective~\cite{tabuada,trimpe}. Input acknowledgments can inform a controller about losses~\cite{schenato}, and event-triggered communication has supported cooperative manipulation~\cite{cooperative}. These approaches motivate asking what the receiver actually acknowledges. A forwarded message can have a known cycle but an unknown magnitude. A target message can have a known value but arrive several control steps after sampling.
 
-We derive a tight one-write error bound, then compare the same hand-based observer with and without target reads during simulated push, grasp and drawer trials. Switching the command origin on the same Panda isolates the interface from robot identity. Physical recordings and a Franka controller filter identify which telemetry could support reconstruction on hardware.
+We trace the information needed for reconstruction from a physical log field to a controller update, then to a proposed change in the next command. We check field timing in DROID recordings and reconstruct a Franka software filter from data available at each decision. For ambiguous origins we derive a sufficient condition for a specific rewrite and check its delivered writes in closed-loop simulation. Paired replay trials establish how these write-level findings relate to hand motion and task completion. All manipulation outcomes are measured in simulation.
 \input{method}
 \input{read-value}
+\input{telemetry}
 \input{protocol}
 \input{results}
 \input{discussion}
 \section*{Acknowledgment}
 OpenAI Codex assisted with experimental design, implementation and execution, literature checks, analysis, figure code and drafting throughout the article. The robot images in Figs.~\ref{fig:fetch} and~\ref{fig:sawyer} are native simulation renders.
-\IEEEtriggeratref{7}
+
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 \end{document}

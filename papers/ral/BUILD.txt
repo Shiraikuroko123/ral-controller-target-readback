@@ -1,11 +1,26 @@
-Compile the anonymous RA-L initial manuscript on US Letter paper using pdfLaTeX,
-BibTeX, and the standard LaTeX packages named in main.tex. Run in this order:
+Build the anonymous RA-L manuscript on US Letter paper with pdfLaTeX and BibTeX.
+Run these four commands in the folder containing main.tex.
 
   pdflatex main.tex
   bibtex main
   pdflatex main.tex
   pdflatex main.tex
 
-The source ZIP contains all six manuscript sections, the .bib and IEEE .bst,
-the original ieeeconf.cls, and all six PDF figures. No network access or
-external graphics generation is needed to rebuild the manuscript.
+The six included section files are method, read-value, telemetry, protocol,
+results and discussion. The archive also includes the bibliography and style,
+the ieeeconf class, and all six PDF figures. The build needs no network access.
+
+To regenerate all six figures, install Python, Matplotlib, NumPy, and Times New Roman,
+then run from this directory
+
+  python figures/build_figures.py
+
+All four simulation panels in Figure 3 use the embedded native renders from the
+archived source figure for the lowest-index rescued held-out Fetch push. The late
+views retain the fixed crop used by the source. Figure 4 uses the archived native
+Sawyer snapshots and the two 150-step object-distance series. Figures 2, 5 and 6
+use the native setter results, paired Panda phase means and layout-level outcomes
+in figures/inputs/. Figure 1 uses the send.rms_mm and ack.rms_mm entries of six
+Franka software runs (pump1-rep0..2 and pump10-rep0..2). The source scores.json
+has SHA-256 2f8cd752f424dd1f7e6ccc4769908e0008fead44e53784c9bac3e7006579812b.
+All six completed PDFs are included for compiling without Python or local plotting fonts.

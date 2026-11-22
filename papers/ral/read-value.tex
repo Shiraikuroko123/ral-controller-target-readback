@@ -1,0 +1,22 @@
+\subsection{The value of a read under action and workspace limits}
+Let $B=[L,H]$ contain the origins compatible with the available history, let $A=[-s,s]$, and let $\ell(b,d)=\|F(b,d)-h\|_2^2$. If an exact read arrives before the next command and that command reaches the setter, the smallest worst-case squared errors are
+\begin{equation}
+ V_0=\min_{d\in A}\max_{b\in B}\ell(b,d),\quad
+ V_1=\max_{b\in B}\min_{d\in A}\ell(b,d).\label{eq:value}
+\end{equation}
+Without a read one command must serve every origin. With a read the replay can choose a command for the observed origin. Thus $V_0-V_1\geq0$ quantifies the reduction in worst error on this write. The two values are exact on $B$. If $B$ is an outer box for a correlated set of histories, their difference need not equal the value on that history set. Its horizon is one delivered write.
+
+The box constraints and squared loss separate across axes. On one axis the worst absolute residual for a fixed $d$ is $\max\{h-C(L+d),C(H+d)-h\}$. The first term decreases weakly with $d$ and the second increases weakly. Their crossing minimizes the maximum, with the corresponding action endpoint optimal when they do not cross on $A$. For a known $b$ the least absolute residual is the distance from $h$ to $[C(b-s),C(b+s)]$. Its maximum over $B$ occurs at $L$ or $H$. Let $r_1$ denote that maximum endpoint distance. The no-read policy matches the informed policy's worst error on this axis precisely when a legal $d$ satisfies
+\begin{equation}
+ C(L+d)\ge h-r_1,\qquad C(H+d)\le h+r_1 .\label{eq:criterion}
+\end{equation}
+These inequalities place the entire interval of possible writes inside the informed policy's worst-error tolerance. If they are infeasible, a read strictly improves the one-axis worst error. Squaring and summing the per-axis distances gives the two values in~\eqref{eq:value}. We checked the calculation on 1,088 native Sawyer writes, including workspace and action limits. With an 18\,mm origin half-width and a 10\,mm action limit, a read reduced the worst distance from 18 to 8\,mm.
+
+\subsection{A sufficient condition for changing a command}
+A replay program can also ask whether a proposed rewrite $d_1$ improves on the recorded displacement $d_0$ for \emph{every} compatible origin. When a submitted displacement may be executed or replaced by zero, propagate $B$ through both clipped updates and take their coordinatewise hull. A read collapses $B$ to the measured target. The hull contains every compatible origin under the stated fault model, and may include impossible histories. Define
+\begin{equation}
+ D=\max_{b\in B}\big[\ell(b,d_1)-\ell(b,d_0)\big].\label{eq:guard}
+\end{equation}
+If $D<-\delta$, any delivered $d_1$ reduces squared target error by more than $\delta$ throughout $B$. To compute $D$ on each axis, evaluate the origin interval endpoints, the four workspace breakpoints for $b+d_0,b+d_1$, and $h-d_0,h-d_1$ when inside the interval. Between breakpoints, each target is constant or affine with slope one. The loss difference is constant or affine when both slopes agree. With one active slope its only possible interior extremum is where the active target equals $h$. Summing coordinate maxima is therefore exact on the box and takes linear time in the number of axes. We use $\delta=10^{-12}\,\mathrm{m}^2$. For a known interval of desired targets on each axis, both endpoints suffice because the difference is affine in $h$ for fixed $b$.
+
+We tested the candidate-specific guarantee on 36 previously unused Sawyer layouts, 12 per task. Each underwent the four replay conditions described in Sec.~\ref{sec:protocol}. We compared copying the recorded displacement against the event policy's proposed rewrite at the same origin and desired target. The guard admitted 658 of 12,474 proposals. Of these, 98 were suppressed. All 560 that reached the setter strictly reduced squared write error at the realized origin. Guarded and unguarded policies both succeeded on all 144 trials, but the guard requested 125 reads versus 115 and produced greater mean hand-path RMS error (2.96 versus 2.64\,mm). Thus verified improvements on individual writes coexisted with worse tracking over the episode.

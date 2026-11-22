@@ -1,0 +1,7 @@
+task,seed,axis,gap_mm,history,method,residual_mm
+push,71810,0,8,0,copy,0.0
+push,71810,0,8,0,midpoint,4.0
+push,71810,0,8,0,readback,0.0
+push,71810,0,8,1,copy,8.0
+push,71810,0,8,1,midpoint,4.0
+push,71810,0,8,1,readback,0.0

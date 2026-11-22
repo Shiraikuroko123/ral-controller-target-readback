@@ -1,4 +1,4 @@
-\section{What Can a Target Read Resolve?}
+\section{Reconstructing and Testing a Target Write}
 \subsection{The command seen by the receiving controller}
 Let $x_t^\star$ and $x_t$ denote the demonstrated and replayed hand positions just before command $t$. The source command specifies a translation $a_t$ in metres after action scaling, and writes the target $g_t^\star$. The recorded hand need not have reached that target. We score the hand against the recorded hand at the same post-step time and score the target separately at the instant it is written.
 
@@ -9,6 +9,8 @@ Let $b_t$ be the command origin, $s$ the per-axis limits, and $C$ the workspace 
 Fetch uses the measured gripper position as $b_t$. Sawyer uses its last written target. On the source tape, Fetch's hand and command determine $g_t^\star$. On Sawyer the initial target and the commands applied during the clean demonstration determine it recursively. A replay read supplies the current \emph{destination} origin. It leaves the source tape unchanged.
 
 To retain the lag between hand and target in the demonstration, we request $h_t=g_t^\star+k(x_t^\star-x_t)$, where $k$ is the hand feedback gain. For an origin estimate $b$, project $h_t$ onto the reachable box $[C(b-s),C(b+s)]$ to obtain $q$. Sending $d=\operatorname{clip}_{[-s,s]}(q-b)$ realizes $q$ if $b$ is the true origin and the command reaches the setter.
+
+For an accumulating receiver, let $u_j$ be the increment actually applied at cycle $j$. Its origin satisfies $b_{j+1}=C(b_j+u_j)$. Knowing an origin at cycle $\tau$ and the applied increments through $t-1$ identifies $b_t$ by iteration. A received bit supplies $u_j$ when it identifies the application cycle and selects between two known increments, such as the submitted command and zero. A forwarded input of unknown amplitude leaves multiple possibilities. A delayed target packet provides $b_\tau$ at its sample cycle. To use it at $t$, propagate all updates between those cycles. Clipping can make distinct input histories meet at the same origin, so unique knowledge of every past input is sufficient but can be unnecessary.
 
 \subsection{A tight error floor for two compatible histories}
 Suppose the observations and sent commands leave two possible origins, $b$ and $b-v$. For example, a hidden overwrite could replace $v$ by zero. Take $h=b$ and assume the workspace is locally inactive and $v$ is an admissible displacement. Sending a common $d$ incurs Euclidean errors $\|d\|_2$ and $\|d-v\|_2$. By the triangle inequality their larger value is at least $\|v\|_2/2$, attained by $d=v/2$. A program that insists on zero error for the first history must send $d=0$ and incur $\|v\|_2$ on the other. An exact read allows a different command in each history and zero error on both. The ambiguity lasts only as long as both histories remain compatible with the available observations.

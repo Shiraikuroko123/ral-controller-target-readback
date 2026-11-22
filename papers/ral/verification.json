@@ -6,11 +6,17 @@
   ],
   "pdf_author": "",
   "figures": 6,
+  "figure_font_family": "Times New Roman",
+  "figure_label_printed_pdf_points": [
+    8.12,
+    8.12
+  ],
+  "type_3_fonts": 0,
   "main_tables": 1,
   "cited_references": 16,
   "independent_rebuild_identical_text": true,
   "independent_rebuild_identical_render_72dpi": true,
-  "embedded_font_objects": 24,
+  "embedded_font_objects": 25,
   "overfull_boxes": 0,
   "undefined_references": 0,
   "archive_files": [
@@ -19,11 +25,25 @@
     "read-value.tex",
     "protocol.tex",
     "results.tex",
+    "telemetry.tex",
     "discussion.tex",
     "references.bib",
     "IEEEtran.bst",
     "ieeeconf.cls",
     "BUILD.txt",
+    "figures/franka-filter-runs.csv",
+    "figures/build_telemetry.py",
+    "figures/build_figures.py",
+    "figures/inputs/ambiguity.csv",
+    "figures/inputs/fetch-copy-final.png",
+    "figures/inputs/fetch-copy-step14.png",
+    "figures/inputs/fetch-reencoded-final.png",
+    "figures/inputs/fetch-reencoded-step14.png",
+    "figures/inputs/panda-phases.csv",
+    "figures/inputs/sawyer-event.png",
+    "figures/inputs/sawyer-paired-outcomes.csv",
+    "figures/inputs/sawyer-scheduled.png",
+    "figures/inputs/sawyer-trace.csv",
     "figures/origin-readback.pdf",
     "figures/ambiguity.pdf",
     "figures/fetch-example.pdf",
@@ -31,6 +51,6 @@
     "figures/replay-comparison.pdf",
     "figures/sawyer-confirmation.pdf"
   ],
-  "pdf_sha256": "2fe8a90988da98ffeca3f2be1f81554628c8673fa31292f6ed539c2b3325c770",
-  "source_zip_sha256": "c3c9e1cc1218dc1bff0e435eb9327e92fcdd9295d66c885b3ee4bc7f67011015"
+  "pdf_sha256": "f73ed9e08caca5482d628c6e76899d1353f5ddf3e14bb9eaa05690bb38300455",
+  "source_zip_sha256": "c7064cd30b7f5b818c6ab1f4750f9cabe2f8face1ff4776222f6c8ff8a1eee24"
 }

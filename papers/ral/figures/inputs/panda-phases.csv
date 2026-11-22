@@ -1,0 +1,5 @@
+phase,policy,rms_mm,terminal
+descend,observer,12.904948894764912,8
+descend,observer_read,11.122642619990513,8
+raise,observer,16.69741017389027,8
+raise,observer_read,17.820210999848896,8
